@@ -35,3 +35,36 @@ data_transforms = {'train': transforms.Compose([transforms.RandomResizedCrop(224
                                      transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                               std=[0.229, 0.224, 0.225])])
                   }
+
+# Loading the train and test images into train_data and test_data respectively
+train_data = datasets.ImageFolder(train_dir, transform=data_transforms['train'])
+test_data = datasets.ImageFolder(test_dir, transform=data_transforms['test'])
+
+# Defining VGG16 model
+vgg16 = models.vgg16(pretrained=True)
+
+classes = ['Pepper__bell___Bacterial_spot', 
+           'Pepper__bell___healthy', 
+           'Potato___Early_blight', 
+           'Potato___healthy', 
+           'Potato___Late_blight',
+           'Tomato__Target_Spot',
+           'Tomato__Tomato_mosaic_virus',
+           'Tomato__Tomato_YellowLeaf__Curl_Virus',
+           'Tomato_Bacterial_spot',
+           'Tomato_Early_blight',
+           'Tomato_healthy',
+           'Tomato_Late_blight',
+           'Tomato_Leaf_Mold',
+           'Tomato_Septoria_leaf_spot',
+           'Tomato_Spider_mites_Two_spotted_spider_mite']
+
+# define dataloader parameters
+batch_size = 20
+num_workers=0
+
+# prepare data loaders
+train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size, 
+                                           num_workers=num_workers, shuffle=True)
+test_loader = torch.utils.data.DataLoader(test_data, batch_size=batch_size, 
+                                          num_workers=num_workers, shuffle=True)
