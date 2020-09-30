@@ -68,3 +68,50 @@ train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size,
                                            num_workers=num_workers, shuffle=True)
 test_loader = torch.utils.data.DataLoader(test_data, batch_size=batch_size, 
                                           num_workers=num_workers, shuffle=True)
+
+# Freeze training for all "features" layers
+for param in vgg16.features.parameters():
+    param.requires_grad = False
+
+
+n_inputs = vgg16.classifier[6].in_features
+last_layer = nn.Linear(n_inputs, len(classes))
+vgg16.classifier[6] = last_layer
+
+# check to see that your last layer produces the expected number of outputs
+'''print(vgg16.classifier[6].out_features)'''
+
+
+# specify loss function (categorical cross-entropy) 
+# specify optimizer (stochastic gradient descent) and learning rate = 0.001
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.SGD(vgg16.classifier.parameters(), lr=0.001)
+
+# number of epochs to train the model
+n_epochs = 21
+
+for epoch in range(1, n_epochs+1):
+
+    # keep track of training and validation loss
+    train_loss = 0.0
+    
+    for batch_i, (data, target) in enumerate(train_loader):
+        
+        # clear the gradients of all optimized variables
+        optimizer.zero_grad()
+        # forward pass: compute predicted outputs by passing inputs to the model
+        output = vgg16(data)
+        # calculate the batch loss
+        loss = criterion(output, target)
+        # backward pass: compute gradient of the loss with respect to model parameters
+        loss.backward()
+        # perform a single optimization step (parameter update)
+        optimizer.step()
+        # update training loss 
+        train_loss += loss.item()
+        
+        if batch_i % 20 == 19:    # print training loss every specified number of mini-batches
+            print('Epoch %d, Batch %d loss: %.16f' %
+                  (epoch, batch_i + 1, train_loss / 20))
+            train_loss = 0.0
+            
