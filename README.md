@@ -20,7 +20,7 @@ We will be deploying the model on an app so that the user can make use of the ca
    - [ ] Testing the API
 - ⛳ App Development
    - [ ] Front End
-      - [ ] Home page
+      - [-] Home page
       - [ ] Input integration
    - [ ] Back End
       - [ ] Integrating the API with the app
