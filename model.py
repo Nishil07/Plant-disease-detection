@@ -12,6 +12,7 @@ from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 import splitfolders
 import torchvision.transforms as transforms
+from sklearn.externals import joblib
 
 # Importing the dataset
 input_folder = 'PlantVillage'
